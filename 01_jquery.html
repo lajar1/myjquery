@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="./css/bootstrap.css"> -->
+    <style>
+        #div1{
+            width: 200px;
+            height: 300px;
+            background-color:pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">      
+    </div>
+    <input type="file" name="" id="file1">
+
+    <form id="form1">
+        <input type="text" name="email_or_mobile" />
+        <input type="password" name="password" />
+        <input type="checkbox" name="remember_me" checked />
+        <button type="submit">提交</button>
+    </form>
+   
+
+    <script src="./js/jquery-3.7.0.js" ></script>
+    <script src="./js/myFun.js" ></script>
+    <script src="./js/myAjax.js" ></script>
+    <script src="./js/template-web.js"></script>
+
+    <!-- //这是模板 -->
+    <script type="text/html" id="model_id">
+        <div>姓名：{{name}}</div>
+        <div>年龄：{{age}}</div>
+        <div>链接：{{@test}}</div>
+        <div>日期：{{date | myDataFormat}}</div>
+        {{each arr}}
+        <div>数组：{{$index + arr[$index]}}</div>
+       {{/each}}
+    </script>
+    <!-- ---------- -->
+    <script>
+       // src="./js/jquery-1.12.4.js"    "./js/jquery-3.7.0.js"    <!-- {{each arr}} --> <!-- {{each}}         -->
+        //入口函数
+        // $(document).ready(function () { 
+        //     console.log('入口函数写法一');
+        // });
+        $(function () {
+            function PadZero(n){
+               return (n < 10)? '0'+n : n;
+            }
+
+            let data ={name:'唐僧',age:20,test:'<a>test link</a>',date:'2023-5-22',arr:[4,5,6]}
+            template.defaults.imports.myDataFormat = function(dtstr){
+                let dt = new Date(dtstr)
+                let y = dt.getFullYear()
+                let m = dt.getMonth() +1
+                let d = dt.getDate()
+                let hh = dt.getHours()
+                let mm = dt.getMinutes()
+                let ss = dt.getSeconds()
+                return y +'-' + PadZero(m) + '-' + PadZero(d) + ' '+ PadZero(hh) + ':' + PadZero(mm) + ':' + PadZero(ss) 
+            };
+            let htmlstr = template('model_id',data)
+            console.log(htmlstr);
+
+            $('#div1').html(htmlstr)
+
+
+            function getSuggestList(kw){
+                $.ajax({
+                        // 淘宝的请求接口，其中，q是用户输入的关键字
+                    url:'https://suggest.taobao.com/sug?q=' + kw,
+                    dataType:'jsonp',  // 指定要发起的是JSONP请求      
+                    success:function(res) { 
+                        console.log(res) }// 成功的回调
+                })
+            } 
+
+
+            $('#form1').on('submit',function(e){
+                e.preventDefault();
+                let str = $('#form1').serialize(); 
+                alert(str)
+            })
+
+            $('#div1').on('click',function(){
+                getSuggestList('c++')
+
+                // $.get('https://autumnfish.cn/api/joke',function(res){
+                //    console.log(res) // 这里的 res 是服务器返回的数据
+                //  })
+                // let files = document.querySelector('#file1').files
+                //         if (files.length <= 0){
+                //             return alert('请选择要上传的文件！')
+                //          }
+                // let fd = new FormData()
+                // fd.append("file",files[0]);
+                // console.log(fd.get("file"));
+                // let xhr = new XMLHttpRequest();
+                // xhr.open('POST','https://autumnfish.cn/api/joke');
+                // xhr.send(fd);
+                //getVoice('你好');
+            })
+
+
+            // let fd = new FormData();
+            // fd.append('uname','唐僧');
+            // fd.append('upwd','123456');
+            // let xhr = new XMLHttpRequest();
+            // //xhr.open('POST','https://autumnfish.cn/api/joke');
+            // //xhr.send(fd);
+            // console.log(fd.get("uname"));
+
+            // myAjax({
+            //     method: 'GET',
+            //     url: 'https://autumnfish.cn/api/joke',
+            //     data: {},
+            //     success: function(res) { // 成功的回调函数
+            //         console.log(res)     
+            //     }
+            // });
+
+
+            // let obj ={
+            //     name : '孙悟空',
+            //     age : 500,
+            //     'addr':"中国北京"
+            // }
+            // console.log(obj);
+            // console.log(JSON.stringify(obj));
+
+            // const sJson = '{"name":"唐僧", "age" : 18, "addr" :"中华长安"  }'
+            // console.log(sJson);
+            
+            // console.log(JSON.parse(sJson));
+            // let url = encodeURI('黑马')
+        
+            // console.log(    decodeURI(url));
+            // function getVoice(text) {
+            //     $.ajax({
+            //         method: 'GET',
+            //         url: 'http://ajax.frontend.itheima.net:3006/api/synthesize',
+            //         data: {
+            //             text:text
+            //         },
+            //         success: function(res){        
+            //             if (res.status  === 200) { // 如果请求成功，则 res.voiceUrl 是服务器返回的音频 URL 地址
+            //               // $('#voice').attr('src',res.voiceUrl)
+            //               console.log(res.voiceUrl);
+            //             }
+            //         }
+            //     })
+            // }
+
+            //  console.log('入口函数写法二')
+
+            //  $('div').bgColor('red');
+            //  $('div').myFun();
+            //  console.log($.addNumber(10,20)); //30
+             //console.log($('div').addNumber(10,20)); //30
+           
+        });
+        // window.onload = function(){
+        //     console.log('ok'); 
+        // }
+        
+
+
+    </script>
+</body>
+</html>
+
