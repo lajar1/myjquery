@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="button" value="ok" id="button" width="100px" height="100px">
+
+    <script>
+
+        const p1 =  Promise.resolve(123)  //{<fulfilled>: 123}
+        const p2 = Promise.reject('err')  //{<rejected>: 'err'}
+
+        const p3 = new Promise((a,b)=>{   //{<fulfilled>: '处理成功'}
+            a("处理成功")
+        })
+        const p4 = Promise.resolve(Promise.reject('p4--err')) //{<rejected>: 'p4--err'}
+            let p5 = Promise.race([p1,p2,p3,p4]) //fulfilled,Result是个数组，包含两个值
+
+            //p5 = Promise.all([p1,p2,p3])  //"rejected",Result: "err"
+            //p5 = Promise.all([p1,p2,p3,p4])  //"rejected",Result: "err"
+            console.log(p5);  
+
+        //node.js 中的util.promisify
+        // const util = require('util');
+        // const fs = require('fs');
+        // let minReadFile = util.promisify(fs.readFile); //返回一个Promise版本
+        // //fs.readFile是传统的回调函数风格，通过util.promisify转为Promis风格
+        // minReadFile('XXXX.txt').then(value=>{},reason=>{});
+        // const btn = document.querySelector('#button')
+        // btn.addEventListener('click',function(){
+        //     const p = new Promise((resolve,reject)=>{
+        //         const xhr = new XMLHttpRequest();
+        //         xhr.open('GET','https://api.apiopen.top/api/getTime')
+        //         xhr.send();
+        //         xhr.onreadystatechange =function(){
+        //             if(xhr.readyState === 4){
+        //                 if(xhr.status >=200 && xhr.status <300){
+        //                     //console.log(xhr.response);
+        //                     //alert('ok')
+        //                     resolve(xhr.response);
+        //                 }else{
+        //                     //console.log(xhr.status);
+        //                     //alert('err')
+        //                     reject(xhr.status);
+        //                 }
+        //             }
+        //         }
+        //     });
+        //     //调用then:  p.then(成功回调{},失败回调{})
+        //     p.then(value=>{
+        //         console.log(value);
+        //     },reason=>{
+        //         console.warn(reason);
+        //     }); 
+        // })
+
+    </script>
+</body>
+</html>
